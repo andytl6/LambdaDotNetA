@@ -9,7 +9,7 @@ Resources:
     Properties:
       Handler: HelloWorld::HelloWorld.Function::FunctionHandler
       Runtime: dotnetcore2.0
-      CodeUri: ./artifacts/HelloWorld.zip
+      CodeUri: ./bin/Release/netcoreapp2.0/publish
       FunctionName: 
         Ref: NameParam
       Events:

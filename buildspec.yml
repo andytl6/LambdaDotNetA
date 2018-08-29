@@ -3,16 +3,14 @@ phases:
   build:
     commands:
       - dotnet restore
-      - dotnet publish -c Release
-      - cd bin/Release/netcoreapp2.0/publish
+      - dotnet publish -c Release      
   post_build:  
     commands:      
       - aws cloudformation package --template-file samTemplate.yaml --s3-bucket ndrest-lambda1
                                    --output-template-file outputSamTemplate.yaml
 artifacts:
   type: zip
-  files:
-    - artifacts/*
+  files:    
     - samTemplate.yaml
     - outputSamTemplate.yaml
     - stage_template_configuration.json
