@@ -1,0 +1,21 @@
+Transform: AWS::Serverless-2016-10-31
+Description: Outputs the time
+Parameters:
+  NameParam:    
+    Type: String      
+Resources:
+  TimeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: HelloWorld::HelloWorld.Function::FunctionHandler
+      Runtime: dotnetcore2.0
+      CodeUri: ./artifacts/HelloWorld.zip
+      FunctionName: 
+        Ref: NameParam
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /hello
+            Method: GET
+            
