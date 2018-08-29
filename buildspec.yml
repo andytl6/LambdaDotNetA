@@ -1,13 +1,18 @@
 version: 0.2
 phases:
-  install:
+  build:
     commands:
-      - npm install time
+      - dotnet restore
+      - dotnet publish -c Release
+      - cd bin/Release/netcoreapp2.0/publish
+  post_build:  
+    commands:      
       - aws cloudformation package --template-file samTemplate.yaml --s3-bucket ndrest-lambda1
                                    --output-template-file outputSamTemplate.yaml
 artifacts:
   type: zip
   files:
+    - artifacts/*
     - samTemplate.yaml
     - outputSamTemplate.yaml
     - stage_template_configuration.json
