@@ -1,5 +1,5 @@
 Transform: AWS::Serverless-2016-10-31
-Description: Outputs the time
+Description: Creates a hello world function, with a parameter for setting the function name depending on if deployed ot Stage or Prod
 Parameters:
   NameParam:    
     Type: String      
