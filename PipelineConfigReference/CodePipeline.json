@@ -1,4 +1,4 @@
-C:\Users\ndrest>aws codepipeline get-pipeline --name dotnetcoreCICD  --region us-east-1
+aws codepipeline get-pipeline --name dotnetcoreCICD  --region us-east-1
 {
     "pipeline": {
         "roleArn": "arn:aws:iam::000000000000:role/ndrest-cfncp-PipelineRole-AKA6PHCIMANX",
