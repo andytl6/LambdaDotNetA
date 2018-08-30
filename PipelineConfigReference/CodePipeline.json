@@ -1,0 +1,182 @@
+C:\Users\ndrest>aws codepipeline get-pipeline --name dotnetcoreCICD  --region us-east-1
+{
+    "pipeline": {
+        "roleArn": "arn:aws:iam::000000000000:role/ndrest-cfncp-PipelineRole-AKA6PHCIMANX",
+        "stages": [
+            {
+                "name": "Source",
+                "actions": [
+                    {
+                        "inputArtifacts": [],
+                        "name": "Source",
+                        "actionTypeId": {
+                            "category": "Source",
+                            "owner": "ThirdParty",
+                            "version": "1",
+                            "provider": "GitHub"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "MyApp"
+                            }
+                        ],
+                        "configuration": {
+                            "Owner": "me",
+                            "Repo": "LambdaDotNetA",
+                            "PollForSourceChanges": "false",
+                            "Branch": "master",
+                            "OAuthToken": "****"
+                        },
+                        "runOrder": 1
+                    }
+                ]
+            },
+            {
+                "name": "Build",
+                "actions": [
+                    {
+                        "inputArtifacts": [
+                            {
+                                "name": "MyApp"
+                            }
+                        ],
+                        "name": "CodeBuild",
+                        "actionTypeId": {
+                            "category": "Build",
+                            "owner": "AWS",
+                            "version": "1",
+                            "provider": "CodeBuild"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "MyAppBuild"
+                            }
+                        ],
+                        "configuration": {
+                            "ProjectName": "DotNetCB"
+                        },
+                        "runOrder": 1
+                    }
+                ]
+            },
+            {
+                "name": "Staging",
+                "actions": [
+                    {
+                        "inputArtifacts": [
+                            {
+                                "name": "MyAppBuild"
+                            }
+                        ],
+                        "name": "MyStageStack",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "version": "1",
+                            "provider": "CloudFormation"
+                        },
+                        "outputArtifacts": [],
+                        "configuration": {
+                            "ActionMode": "CHANGE_SET_REPLACE",
+                            "ChangeSetName": "MyChangeSet",
+                            "RoleArn": "arn:aws:iam::000000000000:role/Cfn-CP-Admin",
+                            "Capabilities": "CAPABILITY_IAM",
+                            "StackName": "MyStageStack",
+                            "TemplateConfiguration": "MyAppBuild::stage_template_configuration.json",
+                            "TemplatePath": "MyAppBuild::outputSamTemplate.yaml"
+                        },
+                        "runOrder": 1
+                    },
+                    {
+                        "inputArtifacts": [],
+                        "name": "ExecuteChangeSet",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "version": "1",
+                            "provider": "CloudFormation"
+                        },
+                        "outputArtifacts": [],
+                        "configuration": {
+                            "StackName": "MyStageStack",
+                            "ActionMode": "CHANGE_SET_EXECUTE",
+                            "ChangeSetName": "MyChangeSet"
+                        },
+                        "runOrder": 2
+                    }
+                ]
+            },
+            {
+                "name": "Production",
+                "actions": [
+                    {
+                        "inputArtifacts": [],
+                        "name": "Approve-Deploy-To-Prod",
+                        "actionTypeId": {
+                            "category": "Approval",
+                            "owner": "AWS",
+                            "version": "1",
+                            "provider": "Manual"
+                        },
+                        "outputArtifacts": [],
+                        "configuration": {},
+                        "runOrder": 1
+                    },
+                    {
+                        "inputArtifacts": [
+                            {
+                                "name": "MyAppBuild"
+                            }
+                        ],
+                        "name": "MyProdStack",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "version": "1",
+                            "provider": "CloudFormation"
+                        },
+                        "outputArtifacts": [],
+                        "configuration": {
+                            "ActionMode": "CHANGE_SET_REPLACE",
+                            "ChangeSetName": "MyChangeSet",
+                            "RoleArn": "arn:aws:iam::000000000000:role/Cfn-CP-Admin",
+                            "Capabilities": "CAPABILITY_IAM",
+                            "StackName": "MyProdStack",
+                            "TemplateConfiguration": "MyAppBuild::prod_template_configuration.json",
+                            "TemplatePath": "MyAppBuild::outputSamTemplate.yaml"
+                        },
+                        "runOrder": 2
+                    },
+                    {
+                        "inputArtifacts": [],
+                        "name": "DeployChangeSet",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "version": "1",
+                            "provider": "CloudFormation"
+                        },
+                        "outputArtifacts": [],
+                        "configuration": {
+                            "StackName": "MyProdStack",
+                            "ActionMode": "CHANGE_SET_EXECUTE",
+                            "ChangeSetName": "MyChangeSet"
+                        },
+                        "runOrder": 3
+                    }
+                ]
+            }
+        ],
+        "artifactStore": {
+            "type": "S3",
+            "location": "codepipeline-us-east-1-000000000000"
+        },
+        "name": "dotnetcoreCICD",
+        "version": 15
+    },
+    "metadata": {
+        "pipelineArn": "arn:aws:codepipeline:us-east-1:000000000000:dotnetcoreCICD",
+        "updated": 1535561429.392,
+        "created": 1535543372.924
+    }
+}

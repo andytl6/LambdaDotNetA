@@ -1,0 +1,39 @@
+aws codebuild batch-get-projects --names DotNetCB
+{
+    "projectsNotFound": [],
+    "projects": [
+        {
+            "timeoutInMinutes": 60,
+            "name": "DotNetCB",
+            "serviceRole": "arn:aws:iam::000000000000:role/service-role/code-build-DotNetCB-service-role",
+            "tags": [],
+            "artifacts": {
+                "namespaceType": "NONE",
+                "packaging": "NONE",
+                "type": "CODEPIPELINE",
+                "name": "DotNetCB"
+            },
+            "lastModified": 1535556791.824,
+            "cache": {
+                "type": "NO_CACHE"
+            },
+            "created": 1535543319.556,
+            "environment": {
+                "computeType": "BUILD_GENERAL1_SMALL",
+                "privilegedMode": false,
+                "image": "aws/codebuild/dot-net:core-2.0",
+                "type": "LINUX_CONTAINER",
+                "environmentVariables": []
+            },
+            "source": {
+                "insecureSsl": false,
+                "type": "CODEPIPELINE"
+            },
+            "badge": {
+                "badgeEnabled": false
+            },
+            "encryptionKey": "arn:aws:kms:us-east-1:000000000000:alias/aws/s3",
+            "arn": "arn:aws:codebuild:us-east-1:000000000000:project/DotNetCB"
+        }
+    ]
+}
